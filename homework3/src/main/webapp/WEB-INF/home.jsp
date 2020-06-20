@@ -19,6 +19,7 @@
 </h3>
 <form method="post">
     <button type="submit" name="logout">Logout</button>
+    <button type="submit" name="register">Register</button>
 </form>
 </body>
 </html>

@@ -17,26 +17,17 @@ public class main {
         tomcat.setPort(8080);
 
         File docBase = new File("/Users/maylin/Desktop/OOCHomework3/homework3/src/main/webapp");
-        docBase.mkdir();
+        docBase.mkdir(); // ชี้ไปที่ webapp
 
         try {
             Context context = tomcat.addWebapp("", docBase.getAbsolutePath());
 
-            FakeDataBase fakeDataBase = new FakeDataBase();
-            HomeServlet homeServlet = new HomeServlet();
-            Tomcat.addServlet(context, homeServlet.getClass().getName(), homeServlet);
-            context.addServletMapping("/home", homeServlet.getClass().getName());
-
-            LoginServlet loginServlet = new LoginServlet(fakeDataBase);
-            Tomcat.addServlet(context, loginServlet.getClass().getName(), loginServlet);
-            context.addServletMapping("/login", loginServlet.getClass().getName());
-
-            RegisterServlet registerServlet = new RegisterServlet(fakeDataBase);
-            Tomcat.addServlet(context, registerServlet.getClass().getName(), registerServlet);
-            context.addServletMapping("/registerUser", registerServlet.getClass().getName());
+            ServletRouter servletRouter = new ServletRouter();
+            servletRouter.initialize(context);
 
             tomcat.start();
             tomcat.getServer().await();
+
         } catch (LifecycleException | ServletException e) {
             e.printStackTrace();
         }

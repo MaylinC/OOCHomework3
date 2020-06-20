@@ -7,13 +7,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.sql.SQLException;
 
-public class RegisterServlet extends HttpServlet {
-    private FakeDataBase fakeDataBase;
-
-    public RegisterServlet(FakeDataBase fakeDataBase) {
-        this.fakeDataBase = fakeDataBase;
-    }
+public class RegisterServlet extends AbstractRoutableServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -23,10 +19,26 @@ public class RegisterServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String username = String.valueOf(request.getParameter("username"));
-        String password = String.valueOf(request.getParameter("password"));
-        System.out.println(username);
-        System.out.println(password);
-        fakeDataBase.addDataBase(username,password);
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        String name = request.getParameter("name");
+        if (request.getParameter("addUser")!= null) {
+            try {
+                authentication.getUserService().addUser(username, password, name);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (request.getParameter("back")!=null) {
+            response.sendRedirect("/index.jsp");
         }
     }
+
+    @Override
+    public String getPattern() {
+        return "/registerUser";
+    }
+}
