@@ -1,5 +1,7 @@
 package authentication;
 
+import org.springframework.security.crypto.bcrypt.BCrypt;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.sql.SQLException;
@@ -30,12 +32,16 @@ public class Authentication { // check user in the sys , log in , log out
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         User user = userService.getUserByUsername(username);
-        if (user.getPassword().equals(password)) {
-            HttpSession httpSession = request.getSession();
-            httpSession.setAttribute("username",username);
-            return true;
-        }
-        else {
+        if (userService.checkExist(username)) {
+            if (BCrypt.checkpw(password, user.getPassword())) {
+                HttpSession httpSession = request.getSession();
+                httpSession.setAttribute("username", username);
+                return true;
+            }
+            else{
+                return false;
+            }
+        } else {
             return false;
         }
     }

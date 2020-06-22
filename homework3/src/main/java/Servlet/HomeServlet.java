@@ -28,9 +28,17 @@ public class HomeServlet extends AbstractRoutableServlet {
             response.sendRedirect("/registerUser");
         }
 
-        if (request.getParameter("logout")!=null) {
+        if (request.getParameter("logout")!= null) {
             authentication.logout(request);
             response.sendRedirect("/login");
+        }
+
+        if (request.getParameter("alter")!= null) {
+            response.sendRedirect("/alter");
+        }
+
+        if (request.getParameter("user")!= null) {
+            response.sendRedirect("/user");
         }
     }
 

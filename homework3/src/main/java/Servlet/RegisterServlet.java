@@ -24,12 +24,13 @@ public class RegisterServlet extends AbstractRoutableServlet {
         String name = request.getParameter("name");
         if (request.getParameter("addUser")!= null) {
             try {
-                authentication.getUserService().addUser(username, password, name);
+                authentication.getUserService().addUser(name,username, password);
             } catch (SQLException e) {
                 e.printStackTrace();
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
+            response.sendRedirect("/index.jsp");
         }
 
         if (request.getParameter("back")!=null) {

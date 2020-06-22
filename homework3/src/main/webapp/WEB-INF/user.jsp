@@ -18,35 +18,43 @@
     <tr>
         <td>ID</td>
         <td>Name</td>
-        <td>Remove</td>
         <td>Edit</td>
+        <td>Remove</td>
     </tr>
     <%
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
             String connUrl = "jdbc:mysql://localhost:3306/Hw3OOC";
             String username = "Maylin";
             String password = "Maylin0972387819";
+            Integer num = 0;
             String query = "select * from data";
+            ResultSet resultSet = null;
+            Class.forName("com.mysql.cj.jdbc.Driver");
             Connection connection = DriverManager.getConnection(connUrl,username,password);
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query);
+            resultSet = statement.executeQuery(query);
             while (resultSet.next()) {
+    %>
+    <tr>
+            <% num++; %>
+            <td> <%=num%> </td>
+            <td> <%= resultSet.getString("name")%> </td>
+            <td> <button type="submit" name="edit" value<%=resultSet.getNString("username")%>>Edit</button> </td>
+            <td> <button type="submit" name="remove" value=<%=resultSet.getNString("username")%>>Remove</button> </td>
 
-            %>
-
-            <%
-
-
-
-
-
-
-
+    </tr>
+    <%  }
+            resultSet.close();
+            statement.close();
+            connection.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     %>
 </table>
+    <button type="submit" name="register">Register</button>
+    <button type="submit" name="back">Back</button>
 </form>
-
-
 </body>
 </html>

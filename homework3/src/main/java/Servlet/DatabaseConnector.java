@@ -1,6 +1,7 @@
 package Servlet;
 
 import authentication.User;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.sql.*;
 
@@ -14,21 +15,38 @@ public class DatabaseConnector {
         return connection;
     }
 
-    public void addUser(String username, String password, String name) throws SQLException, ClassNotFoundException {
+    public void addUser(String name, String password, String username) throws SQLException, ClassNotFoundException {
         Connection dbConnection = null;
         PreparedStatement preparedStatement = null;
         dbConnection = Connection();
         String query = "insert into data (name,password,username) values (?,?,?)";
+        String pw_hash = BCrypt.hashpw(password, BCrypt.gensalt());
         preparedStatement = dbConnection.prepareStatement(query);
         preparedStatement.setString(1,name);
-        preparedStatement.setString(2,password);
+        preparedStatement.setString(2,pw_hash);
         preparedStatement.setString(3,username);
         preparedStatement.executeUpdate();
         dbConnection.close();
     }
 
-    public void editUser(String username, String alter, String) {
+    public void editUser(String username, String alter, String changeWhat) throws SQLException, ClassNotFoundException {
+        Connection dbConnection = null;
+        PreparedStatement preparedStatement = null;
+        String query = null;
+        dbConnection = Connection();
+        if(changeWhat.equals("password")){
+            query = "update data set password=? where username=?";
+            String pw_hash = BCrypt.hashpw(alter, BCrypt.gensalt());
+        }
 
+        if (changeWhat.equals("name")) {
+            query = "update data set name=? where username=?";
+        }
+        preparedStatement = dbConnection.prepareStatement(query);
+        preparedStatement.setString(1,alter);
+        preparedStatement.setString(2,username);
+        preparedStatement.executeUpdate();
+        dbConnection.close();
     }
 
     public User getDataFromUser(String username) throws SQLException, ClassNotFoundException {
@@ -64,7 +82,7 @@ public class DatabaseConnector {
         Connection dbConnection = null;
         PreparedStatement preparedStatement = null;
         dbConnection = Connection();
-        String query = "delete from data // where username=?;";
+        String query = "delete from data // where username=?";
         preparedStatement = dbConnection.prepareStatement(query);
         preparedStatement.setString(1,username);
         preparedStatement.executeUpdate();
@@ -73,7 +91,7 @@ public class DatabaseConnector {
 
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
         DatabaseConnector databaseConnector = new DatabaseConnector();
-        databaseConnector.addUser("MaylinC","maylin1234","Maylin");
-//        databaseConnector.getDataFromUser("maylin");
+        databaseConnector.addUser("Maylin","maylin1234","MaylinC");
+//        databaseConnector.editUser("MaylinC","MaylinCath","name");
     }
 }

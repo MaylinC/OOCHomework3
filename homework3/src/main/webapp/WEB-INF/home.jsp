@@ -20,6 +20,8 @@
 <form method="post">
     <button type="submit" name="logout">Logout</button>
     <button type="submit" name="register">Register</button>
+    <button type="submit" name="alter">AlterPassword</button>
+    <button type="submit" name="user">User</button>
 </form>
 </body>
 </html>

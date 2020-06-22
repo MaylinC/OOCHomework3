@@ -16,17 +16,21 @@ public class UserService {
         return databaseConnector.getDataFromUser(username);
     }
 
-    public void addUser(String username,String password, String name) throws SQLException, ClassNotFoundException {
-        databaseConnector.addUser(username, password, name);
+    public void addUser(String name,String password, String username) throws SQLException, ClassNotFoundException {
+        databaseConnector.addUser(name,password,username);
     }
 
-    public Boolean checkUserExist(String username) throws SQLException, ClassNotFoundException {
+    public Boolean checkExist(String username) throws SQLException, ClassNotFoundException {
         if(databaseConnector.checkUser(username)) {
             return true;
         }
         else {
             return false;
         }
+    }
+
+    public void changePasswordAndName(String username,String alter, String change) throws SQLException, ClassNotFoundException {
+        databaseConnector.editUser(username,alter,change);
     }
 
     public void  removeUser(String username) throws SQLException, ClassNotFoundException {
