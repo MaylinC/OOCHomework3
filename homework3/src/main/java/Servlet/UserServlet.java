@@ -55,7 +55,7 @@ public class UserServlet extends AbstractRoutableServlet {
             }
         }
         if (request.getParameter("back") != null) {
-            response.sendRedirect("/index.jsp");
+            response.sendRedirect("/home");
         }
 
         if (request.getParameter("register") != null) {

@@ -18,7 +18,7 @@
     <tr>
         <td>ID</td>
         <td>Name</td>
-        <td>Edit</td>
+<%--        <td>Edit</td>--%>
         <td>Remove</td>
     </tr>
     <%
@@ -39,7 +39,7 @@
             <% num++; %>
             <td> <%=num%> </td>
             <td> <%= resultSet.getString("name")%> </td>
-            <td> <button type="submit" name="edit" value<%=resultSet.getNString("username")%>>Edit</button> </td>
+<%--            <td> <button type="submit" name="edit" value<%=resultSet.getNString("username")%>>Edit</button> </td>--%>
             <td> <button type="submit" name="remove" value=<%=resultSet.getNString("username")%>>Remove</button> </td>
 
     </tr>

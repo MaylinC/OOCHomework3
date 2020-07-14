@@ -5,26 +5,35 @@ import authentication.UserService;
 import org.apache.catalina.Context;
 import org.apache.catalina.startup.Tomcat;
 
+import javax.servlet.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ServletRouter {
+    private DatabaseConnector databaseConnector;
+    private static Map<String, HttpServlet> urls = new HashMap<>();
+    private List<Class<? extends AbstractRoutableServlet>> servletClasses;
 
-    private final List<Class<? extends AbstractRoutableServlet>> servletClasses = new ArrayList<>();
-
-    {
-        servletClasses.add(HomeServlet.class); //get only class
-        servletClasses.add(LoginServlet.class);
-        servletClasses.add(RegisterServlet.class);
-        servletClasses.add(AlterPasswordServlet.class);
-        servletClasses.add(UserServlet.class);
-        servletClasses.add(EditServlet.class);
+    public ServletRouter() {
+        AllServlet allServlet = new AllServlet();
+        servletClasses = allServlet.getServletClasses();
+    }
+    public DatabaseConnector getDatabaseConnector(){
+        return databaseConnector;
     }
 
     public void initialize(Context ctx) {
-        DatabaseConnector databaseConnector = new DatabaseConnector();
+        databaseConnector = new DatabaseConnector();
         UserService userService = new UserService(databaseConnector);
         Authentication authentication = new Authentication(userService);
+        authentication.setUserService(userService);
+
 
         for (Class<? extends AbstractRoutableServlet> servletClass : servletClasses) {
             try {
@@ -32,10 +41,15 @@ public class ServletRouter {
                 httpServlet.setAuthentication(authentication);
                 Tomcat.addServlet(ctx, httpServlet.getClass().getName(), httpServlet);
                 ctx.addServletMapping(httpServlet.getPattern(), httpServlet.getClass().getName());
+                urls.put(httpServlet.getPattern(),httpServlet);
 
             } catch (InstantiationException | IllegalAccessException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    public  Map<String, HttpServlet> getUrls() {
+        return urls;
     }
 }

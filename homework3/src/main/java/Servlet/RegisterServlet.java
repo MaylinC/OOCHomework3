@@ -16,7 +16,6 @@ public class RegisterServlet extends AbstractRoutableServlet {
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("WEB-INF/registerUser.jsp");
         requestDispatcher.include(request,response);
     }
-
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String username = request.getParameter("username");
@@ -24,17 +23,17 @@ public class RegisterServlet extends AbstractRoutableServlet {
         String name = request.getParameter("name");
         if (request.getParameter("addUser")!= null) {
             try {
-                authentication.getUserService().addUser(name,username, password);
+                authentication.getUserService().addUser(name,password, username);
             } catch (SQLException e) {
                 e.printStackTrace();
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
-            response.sendRedirect("/index.jsp");
+            response.sendRedirect("/home");
         }
 
         if (request.getParameter("back")!=null) {
-            response.sendRedirect("/index.jsp");
+            response.sendRedirect("/home");
         }
     }
 

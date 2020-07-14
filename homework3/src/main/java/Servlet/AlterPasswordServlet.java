@@ -22,15 +22,13 @@ public class AlterPasswordServlet extends AbstractRoutableServlet {
         if (request.getParameter("alter")!= null) {
             try {
                 authentication.getUserService().changePasswordAndName((String) request.getSession().getAttribute("username"),password,"password");
-            } catch (SQLException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
+            } catch (SQLException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
-            response.sendRedirect("/index.jsp");
+            response.sendRedirect("/home");
         }
         if (request.getParameter("back")!= null) {
-            response.sendRedirect("/index.jsp");
+            response.sendRedirect("/home");
         }
     }
 

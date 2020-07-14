@@ -7,7 +7,6 @@ import java.sql.*;
 
 public class DatabaseConnector {
 
-
     public Connection Connection() throws ClassNotFoundException,SQLException {
         Connection connection = null;
         Class.forName("com.mysql.cj.jdbc.Driver");
@@ -36,7 +35,7 @@ public class DatabaseConnector {
         dbConnection = Connection();
         if(changeWhat.equals("password")){
             query = "update data set password=? where username=?";
-            String pw_hash = BCrypt.hashpw(alter, BCrypt.gensalt());
+            alter = BCrypt.hashpw(alter, BCrypt.gensalt());
         }
 
         if (changeWhat.equals("name")) {
@@ -54,8 +53,10 @@ public class DatabaseConnector {
         PreparedStatement preparedStatement = null;
         dbConnection = Connection();
         Statement statement = dbConnection.createStatement();
-        String query = "select * from data";
-        ResultSet resultSet = statement.executeQuery(query);
+        String query = "select * from data where username=?";
+        preparedStatement = dbConnection.prepareStatement(query);
+        preparedStatement.setString(1,username);
+        ResultSet resultSet = preparedStatement.executeQuery();
         User user = null;
         if (resultSet.next()) {
             if (resultSet.getNString("username").equals(username)) {
@@ -66,15 +67,14 @@ public class DatabaseConnector {
         return user;
     }
 
-    public Boolean checkUser(String username) throws SQLException, ClassNotFoundException {
+    public Boolean checkUser(String userName) throws SQLException, ClassNotFoundException {
         Connection dbConnection = null;
         PreparedStatement preparedStatement = null;
         dbConnection = Connection();
-        String query = "select * from data // where username=?";
+        String query = "select * from data where username=?";
         preparedStatement = dbConnection.prepareStatement(query);
-        preparedStatement.setString(1,username);
-        ResultSet resultSet = preparedStatement.executeQuery(query);
-        dbConnection.close();
+        preparedStatement.setString(1,userName);
+        ResultSet resultSet = preparedStatement.executeQuery();
         return resultSet.next(); //if have username then return true, if not then false
     }
 
@@ -82,7 +82,7 @@ public class DatabaseConnector {
         Connection dbConnection = null;
         PreparedStatement preparedStatement = null;
         dbConnection = Connection();
-        String query = "delete from data // where username=?";
+        String query = "delete from data where username=?";
         preparedStatement = dbConnection.prepareStatement(query);
         preparedStatement.setString(1,username);
         preparedStatement.executeUpdate();
@@ -92,6 +92,7 @@ public class DatabaseConnector {
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
         DatabaseConnector databaseConnector = new DatabaseConnector();
         databaseConnector.addUser("Maylin","maylin1234","MaylinC");
+        databaseConnector.checkUser("MaylinC");
 //        databaseConnector.editUser("MaylinC","MaylinCath","name");
     }
 }

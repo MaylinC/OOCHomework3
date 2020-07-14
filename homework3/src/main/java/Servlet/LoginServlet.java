@@ -23,7 +23,7 @@ public class LoginServlet extends AbstractRoutableServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { //อะไรที่ต้องทำหลังเปิดเว็ป
         try {
             if (authentication.login(request)) {
-                response.sendRedirect("/");
+                response.sendRedirect("/home");
             }
             else {
                 String error = "Please try again, Password or Username is invalid";
@@ -35,6 +35,9 @@ public class LoginServlet extends AbstractRoutableServlet {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+        }
+        if (request.getParameter("register")!=null) {
+            response.sendRedirect("/registerUser");
         }
     }
 

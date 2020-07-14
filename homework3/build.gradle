@@ -1,12 +1,28 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'eu.appsatori:gradle-fatjar-plugin:0.3'
+    }
+}
 plugins {
     id 'java'
 }
-
+task fatJar(type: Jar) {
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+    manifest {
+        attributes 'Main-Class': 'Servlet.WebApp'
+    }
+}
 group 'oi.muzoo.ooc.homework3'
 version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
 
+apply plugin: 'java'
 apply plugin: 'war'
 
 repositories {

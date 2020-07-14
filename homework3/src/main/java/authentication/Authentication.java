@@ -19,6 +19,10 @@ public class Authentication { // check user in the sys , log in , log out
         return session.getAttribute("username") != null;
     }
 
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
     public String getCurrentUsername(HttpServletRequest request) {
         HttpSession session = request.getSession();
         return (String) session.getAttribute("username"); //.getAttri return object so we cast it
